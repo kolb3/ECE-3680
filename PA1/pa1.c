@@ -5,7 +5,6 @@
 #include "build.h"
 
 
-#ifdef TEST_MAIN
 int main(int argc, char * * argv)
 {
 	// check for input error
@@ -23,13 +22,7 @@ int main(int argc, char * * argv)
     fprintf(stdout, "%d\n", -1);
 		return EXIT_FAILURE;
 	}
-	// n is availavle in argv[1]
-	//int n;
-	//fscanf(fptr, "%d", &n);
-	/// dim is available in argv[2]
-	//int dim;
-	//fscanf(fptr, "%d", &dim);
-	// input file is in argv[3]
+
   char instruct;
   instruct = argv[0];
 
@@ -47,7 +40,7 @@ int main(int argc, char * * argv)
       return EXIT_FAILURE;
   }
 
-  ListNode * newhead = NULL;
+  /*ListNode * newhead = NULL;
 	// Create linkedList
 	LinkedListCreate(&newhead, n, dim, fptr);
 	// call MakeCluster
@@ -70,9 +63,8 @@ int main(int argc, char * * argv)
 	free(newhead->treenode->left);
 	free(newhead->treenode->right);
 	free(newhead->treenode);
-	free(newhead);
+	free(newhead);*/
 
   fprintf(stdout, "%d\n", 0);
   EXIT_SUCCESS;
 }
-#endif

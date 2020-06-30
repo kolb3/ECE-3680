@@ -16,4 +16,4 @@ typedef struct LNode
 void Preorder(ListNode * head);
 ListNode* CreateNode(int n, int dim, int* arr);
 void LinkedListCreate(ListNode ** head, int n, int dim, FILE* fptr);
-ListNode* CreateNode(int n, int dim, int* arr);
+
