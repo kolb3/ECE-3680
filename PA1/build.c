@@ -3,73 +3,106 @@
 #include <string.h>
 #include <limits.h>
 #include "build.h"
+#include "move.h"
 
 
-//Preorder
-void Preorder(ListNode * head)
+int max(int x, int y)
 {
-
+	return ((x > y)? x: y);
 }
 
-ListNode* CreateNode(int n, int dim, int* arr)
+//make sure rc and lc are always passed as 0
+int height(TreeNode * head)
 {
-	// Same as previous HW
-	ListNode * head = malloc(sizeof(ListNode));
+	
+	//int temp;
+	
 	if(head == NULL)
 	{
-		fprintf(stderr, "memallocation of head didnt work\n");
+		return 0;
 	}
-	head -> next = NULL;
-	// initialize dim
-	TreeNode * new = malloc(sizeof(TreeNode)); // Possibly need to create a second head
-	if(new == NULL)
+	else
 	{
-		fprintf(stderr, "mem alloc of treenode didnt work\n");
+		return(head->height);
 	}
-	head -> treenode = new;
-	new -> dimension = dim;
-	// both left and right childern will be NULL
-	new -> left = NULL;
-	new -> right = NULL;
-	// allocate memory for data
-	new -> data = malloc(sizeof(int) * dim);
-	for(int i = 0; i < dim; i++)
-	{
-		new -> data[i] = arr[i];
-	}
-	// return a ListNode
-	return head;
 }
 
-void LinkedListCreate(ListNode ** head, int n, int dim, FILE* fptr)
+int bal(TreeNode * head)
 {
-	// Same as previous HW
-	ListNode * one = NULL;
- 	ListNode * two = NULL;
- 	int spot = 0;
-
-	int * arr = malloc(sizeof(int) * n * dim);
- 	for(int q = 0; q < (n * dim); q++)
- 	{
-		 fscanf(fptr, "%d", &arr[q]);
- 	}
- 	for(int i = 0; i < n; i++)
- 	{
-	spot = i;
-	 	if(i == 0)
-	 	{
-			 *head = CreateNode(n, dim, arr);
-		 	one = *head;
-	 	}
-	 	else
-	 	{
-			two = CreateNode(n,dim,&arr[(spot*dim)]);
-		 	one -> next = two;
-		 	one = two;
-	 	}
-
- 	}
-	free(arr);
+	if(head == NULL)
+	{
+		return 0;
+	}
+	return (height(head->left) - height(head->right));
 }
+
+TreeNode * createnode(int num)
+{
+	TreeNode * head = malloc(sizeof(struct TNode));
+	if(head == NULL)
+	{
+		fprintf(stderr, "\nmemory allocation issue\n");
+		fprintf(stdout, "%d\n", 0);
+	}
+	head -> key = num;
+	head -> left = NULL;
+	head -> right = NULL;
+	head -> height = 0;
+	return head; //might need to add an ampersand
+}
+
+TreeNode * insert(TreeNode * head, int key)
+{
+	//Variable Declarations
+	int equiv;
+
+	//If less than or equal too throw it on the left if the pointer isnt Null move to left child
+	if(head == NULL)
+	{
+		return(createnode(key));
+	}
+	if(key <= head-> key)
+	{
+		head -> left = insert(head -> left, key);
+	}	
+	else if(key > head->key)
+	{
+		head -> right = insert(head -> right, key);
+	}
+	
+	//update height after every addition
+	head->height = 1 + max(height(head->left),height(head->right)); //height should return the height, if its null it should be 0
+	
+	//check the balance for rotations
+	equiv = bal(head);
+	
+
+	if(equiv > 1 && key <= head->left->key)
+	{
+		return rightRotate(head);
+	}
+	
+
+	if(equiv < -1 && key > head->right->key)
+	{
+		return leftRotate(head);
+	}
+	//Left Right
+	if(equiv > 1 && key > head->left->key)
+	{
+		head->right=leftRotate(head->left);
+		return (rightRotate(head));
+	}
+	//Right Left
+	if(equiv < -1 && key <= head -> right -> key)
+	{
+		head->right = rightRotate(head->right);
+		return (leftRotate(head));
+	}
+
+	return head;	
+
+}
+
 
 

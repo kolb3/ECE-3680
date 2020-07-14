@@ -2,18 +2,18 @@ typedef struct TNode
 {
 	struct TNode* left;
 	struct TNode* right;
-	int* data;
-	int dimension;
+	int key;
+	//int dimright;
+	//int dimleft;
+	//int bal; //think i can use this instead of dimright and dimleft, just keep track of balance
+	int height;
 }TreeNode;
 
 
-typedef struct LNode
-{
-	struct LNode *next;
-	TreeNode* treenode;
-}ListNode;
+int height(TreeNode * head);
+TreeNode * createnode(int num);
+TreeNode * insert(TreeNode * head, int key);
+int max(int x, int y);
+int bal(TreeNode * head);
 
-void Preorder(ListNode * head);
-ListNode* CreateNode(int n, int dim, int* arr);
-void LinkedListCreate(ListNode ** head, int n, int dim, FILE* fptr);
 
