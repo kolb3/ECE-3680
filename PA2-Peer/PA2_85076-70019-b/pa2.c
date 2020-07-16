@@ -14,12 +14,12 @@ int main (int argc, char * argv[])
     // Statements
     if (argc != 4)
         return EXIT_FAILURE;
-    if (strncmp("-a", argv[1], 2) == 0)
+    if (strncmp("-a", "-a", 2) == 0)
     {
-        long* arr = Array_Load_From_File(argv[2], &size);
+        long* arr = Array_Load_From_File("15.b", &size);
         if (size == 0)
         {
-            Array_Save_To_File(argv[3], arr, size);
+            Array_Save_To_File("output1.b", arr, size);
             free(arr);
             return EXIT_SUCCESS;
         }   // if
