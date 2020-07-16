@@ -6,29 +6,29 @@ static double myFloor (double x)
 {
     // Local Declarations
     double temp = (double) (int) x;
-    
+
     // Statements
     return temp;
 }   // myFloor
 
-static double myPow (double x, int y) 
-{ 
+static double myPow (double x, int y)
+{
     // Local Declarations
-    double temp; 
-    
+    double temp;
+
     // Statements
-    if (y == 0) 
-       return 1; 
-    temp = myPow (x, y / 2);        
-    if (y % 2 == 0) 
-        return temp * temp; 
+    if (y == 0)
+       return 1;
+    temp = myPow (x, y / 2);
+    if (y % 2 == 0)
+        return temp * temp;
     else
-    { 
-        if (y > 0) 
-            return x * temp * temp; 
+    {
+        if (y > 0)
+            return x * temp * temp;
         else
-            return (temp * temp) / x; 
-    }   // else 
+            return (temp * temp) / x;
+    }   // else
 }   // myPow
 
 static double ln (double x)
@@ -52,9 +52,9 @@ static double ln (double x)
 static double myLog10 (double x) {
     // Local Declarations
     static double ln10 = 2.3025850929940456840179914546844;
-    
+
     // Statements
-    return ln(x) / ln10;    
+    return ln(x) / ln10;
 }   // myLog10
 
 static double smoothCount (double x)
@@ -62,7 +62,7 @@ static double smoothCount (double x)
     // Local Declarations
     int k = 0;
     double i = myFloor (myLog10 (x) / myLog10 (3)), result = 0;
-    
+
     // Statements
     while (k <= (int) i)
     {
@@ -85,7 +85,7 @@ long* Generate_2p3q_Seq (int length, int* seq_size)
         *seq_size = 0;
         return NULL;
     }   // if
-    
+
     // Statements
     while (j < length)
     {
@@ -96,7 +96,7 @@ long* Generate_2p3q_Seq (int length, int* seq_size)
             j = powOf3;
             powOf3 *= 3;
         }   // if
-        else 
+        else
         {
             j = sequence[nextInd] * 2;
             nextInd++;

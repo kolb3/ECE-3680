@@ -10,7 +10,7 @@ int main (int argc, char * argv[])
     // Local Declarations
     int size = 0;
     double n_comp = 0;
-    
+
     // Statements
     if (argc != 4)
         return EXIT_FAILURE;
