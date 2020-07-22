@@ -12,10 +12,43 @@
 //the n_comp variable is that supposed to be passed by address purely so we can count the number of times things have been evaluated?
 //the other question I have is on the generate function, am I just supposed to create a pratt gap sequence of elements that are less than n, n being the totall number of elements from the file?
 //then this array of gap sequence elements 1,2,3,4,6,8,9 etc are supposed to be set as longs and then those will give us the key k for the shells in the shell sort.
-int main()
+int main(int argc, char * * argv)
 {
-  int num;
-  int * array = NULL;
+  int num = 0;
+  double comp = 0;
+  long * arr = NULL;
+
+  if(argc <= 3)
+	{
+		fprintf(stderr, "need 4 inputs\n");
+		return EXIT_FAILURE;
+	}
+
+
+  if(argv[1] == "-a")
+  {
+    arr = Array_Load_From_File(argv[2], &num);
+    if(num == 0)
+    {
+      Array_Save_To_File(argv[3], arr, num);
+      return EXIT_SUCCESS;
+    }
+    Array_Shellsort(arr,num,&comp);
+    Array_Save_To_File(argv[3], arr, num);
+    printf("%le\n", comp);
+
+    return EXIT_SUCCESS;
+
+  }
+  if(argv[1] == "-l")
+  {
+    return EXIT_SUCCESS;
+  }
+  else
+  {
+    fprintf(stderr, "need to know if array or linked list\n");
+    return EXIT_FAILURE;
+  }
 
 
 }
