@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <math.h>
 #include "sequence.h"
 #include "shell_array.h"
 #include "shell_list.h"
@@ -18,6 +19,8 @@ int main(int argc, char * * argv)
   double comp = 0;
   long * arr = NULL;
 
+  //printf("%d\n",argc);
+  //printf("%s, %s\n", argv[2],argv[3]);
   if(argc <= 3)
 	{
 		fprintf(stderr, "need 4 inputs\n");
@@ -25,8 +28,9 @@ int main(int argc, char * * argv)
 	}
 
 
-  if(argv[1] == "-a")
+  if(strcmp(argv[1],"-a") == 0)
   {
+	//printf("made it in -a\n");
     arr = Array_Load_From_File(argv[2], &num);
     if(num == 0)
     {
@@ -34,13 +38,14 @@ int main(int argc, char * * argv)
       return EXIT_SUCCESS;
     }
     Array_Shellsort(arr,num,&comp);
+//printf("made it through the sort\n");
     Array_Save_To_File(argv[3], arr, num);
     printf("%le\n", comp);
 
     return EXIT_SUCCESS;
 
   }
-  if(argv[1] == "-l")
+  if(strcmp(argv[1],"-l") == 0)
   {
     return EXIT_SUCCESS;
   }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <math.h>
 #include "sequence.h"
 #include "shell_array.h"
 #include "shell_list.h"
@@ -9,7 +10,7 @@
 
 long *Array_Load_From_File(char *filename, int *size)
 {
-  int ct
+  int ct;
   long * input = NULL;
 
   FILE * fptr = fopen(filename, "rb");
@@ -21,20 +22,22 @@ long *Array_Load_From_File(char *filename, int *size)
 
   fseek(fptr,0,SEEK_END);
   *size = ftell(fptr);
+  ct = *size;
   *size = *size/sizeof(long);
   fseek(fptr,0,SEEK_SET);
 
   if(ct % sizeof(long) != 0)
   {
     fclose(fptr);
-    return EXIT_FAILURE;
+    exit(EXIT_FAILURE);
   }
 
   input = malloc(sizeof(long) * *size);
 
   for(ct = 0; ct < *size; ct++)
   {
-    fscanf(fptr, "%ld", &arr[ct]);
+    if(fread(&input[ct], sizeof(long),1,fptr) != 1)
+	break;
   }
 
   fclose(fptr);
@@ -47,36 +50,40 @@ int Array_Save_To_File(char *filename, long *array, int size)
   int ct;
 
   FILE * fptr = fopen(filename, "wb");
+  
+  //printf("%s\n",filename);
+  
   for(ct = 0; ct < size; ct++)
   {
     fwrite(&array[ct], sizeof(long), 1, fptr);
   }
   fclose(fptr);
-  return;
+  return ct;
 }
 
 void Array_Shellsort(long *array, int size, double *n_comp)
 {
-  int ct; //seq size in Generate_2p3q_Seq
+  int ct=0; //seq size in Generate_2p3q_Seq
   long * key = NULL; //array of shell sort numbers
   long count, hold, temp, diff; // different holder variables for moving around
 
-  *key = Generate_2p3q_Seq(size, *ct);
+  key = Generate_2p3q_Seq(size, &ct);
+ //printf("%ld\n",key[ct]);
 
-  while(ct > 0)
+  while(ct >= 0)
   {
-    diff = key[ct]
+    diff = key[ct];
     for(count = diff; count < size; count++)
     {
       temp = array[count];
       hold = count - diff;
-      while(hold >= 0 && temp < array[hold])
+      while(hold >= 0 && (temp < array[hold]))
       {
-        array[hold + diff] = temp;
+        array[hold + diff] = array[hold];
         hold -= diff;
       }
       array[hold + diff] = temp;
-      *n_comp++;
+      (*n_comp)++;
     }
     ct--;
   }

@@ -2,64 +2,90 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <math.h>
 #include "sequence.h"
 #include "shell_array.h"
 #include "shell_list.h"
 
 long * Generate_2p3q_Seq(int length, int * seq_size)
 {
-  int ct,i = 0
+  int ct,i,p,q = 0;
   int dexi;
   int phold,qhold;
-  long * key = NULL
+  long * key = NULL;
+  long * newkey = NULL;
   long temp;
-  *seq_size = 0;
+  int count = 0;
 
-  key = malloc(sizeof(long));
+  key = malloc(length * sizeof(long));
   if(key == NULL)
   {
+    *seq_size = 0;
     return NULL;
   }
 
-  phold = floor(length ** (1/2));
-  qhold = floor(length ** (1/3));
-
+  phold = (pow(length,(.5)));
+  qhold = (pow(length,(.3333)));
+//printf("%d, %d\n",phold,qhold);
   for(ct = 0; ct <= phold; ct++)
   {
     for(i = 0; i <= qhold; i++)
     {
-      temp = (2**ct)*(3**i);
-      dexi = noexist(temp, *seq_size, &key);
-      if(dexi && temp < length)
+      p = pow(2,ct);
+      q = pow(3,i);
+      temp = (long)p * (long)q;
+//printf("%ld\n",temp);
+//printf("%d\n",length);
+      dexi = noexist(temp, count, key);
+printf("%d,  %ld\n",dexi, temp);
+      if(dexi && (temp < length) && (temp >= 0))
       {
-        if(key[*seq_size] == NULL //this should reallocate the memory and allow to add one more
-        {
-          key = realloc(key, sizeof(long));
-        }
-        key[*seq_size] = temp
-        *seq_size++;
+        key[count] = temp;
+        count++;
       }
 
     }
   }
-  *seq_size--;
-  key = quicksort(key, *seq_size);
-  return seq_size;
+  //printf("%d\n",count);
+  newkey = calloc(count, sizeof(long));
+  for(int t = 0; t< count; t++)
+  {
+	newkey[t] = key[t];
+  }
+  
+  /*for(int t = 0; t< count; t++)
+  {
+	printf("%ld\n",key[t]);
+  }*/
+
+  free(key);
+  *seq_size = count-1;
+  sort(newkey, *seq_size);
+  for(int t = 0; t< count; t++)
+  {
+	printf("%ld\n",newkey[t]);
+  }
+  return newkey;
 
 }
 
 
-bool noexist(int comp, int size, long * arr)
+int noexist(long comp, int size, long * arr)
 {
-  int ct = 0;
-  while(ct <= size)
+  int ct;
+  if(size == 0)
   {
-    if(temp = arr[ct])
-    {
-      return false;
-    }
+    return 1;
   }
-  return true;
+  for(ct = 0; ct < size; ct++)//while(ct <= size)
+  {
+    if(comp == arr[ct])
+    {
+      return 0;
+    }
+  
+  }
+  return 1;
 }// should check to see if the number is already in the array if it is then returns false else returns true
 //and then it should run the reallocate part and save the new value
 
@@ -67,7 +93,7 @@ bool noexist(int comp, int size, long * arr)
 void sort(long * key, int count)
 {
   long temp;
-  if(count <= 1)
+  if(count < 1)
   {
     return;
   }
