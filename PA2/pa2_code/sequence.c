@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-#include <math.h>
 #include "sequence.h"
 #include "shell_array.h"
 #include "shell_list.h"
@@ -24,20 +23,20 @@ long * Generate_2p3q_Seq(int length, int * seq_size)
     return NULL;
   }
 
-  phold = (pow(length,(.5)));
-  qhold = (pow(length,(.3333)));
+  phold = quot(length,2); //changed from power function
+  qhold = quot(length,3); //changed from power function
 //printf("%d, %d\n",phold,qhold);
   for(ct = 0; ct <= phold; ct++)
   {
     for(i = 0; i <= qhold; i++)
     {
-      p = pow(2,ct);
-      q = pow(3,i);
+      p = exponent(2,ct);  //changed from power function
+      q = exponent(3,i);   //changed from power function
       temp = (long)p * (long)q;
 //printf("%ld\n",temp);
 //printf("%d\n",length);
       dexi = noexist(temp, count, key);
-printf("%d,  %ld\n",dexi, temp);
+//printf("%d,  %ld\n",dexi, temp);
       if(dexi && (temp < length) && (temp >= 0))
       {
         key[count] = temp;
@@ -61,14 +60,36 @@ printf("%d,  %ld\n",dexi, temp);
   free(key);
   *seq_size = count-1;
   sort(newkey, *seq_size);
-  for(int t = 0; t< count; t++)
+  /*for(int t = 0; t< count; t++)
   {
 	printf("%ld\n",newkey[t]);
-  }
+  }*/
   return newkey;
 
 }
 
+//new function to find the exponent number needed
+int quot(int a, int b)
+{
+	int ans = 0;
+	while(a != 0)
+	{
+		a /= b;
+		ans++;
+	}
+	return ans;
+}
+
+//new function to find answer after power
+int exponent(int a, int b)
+{
+	int ans = 1;
+	for(int i = 0; i < b; i++)
+	{
+		ans *= a;
+	}
+	return ans;
+}
 
 int noexist(long comp, int size, long * arr)
 {
