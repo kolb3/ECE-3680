@@ -100,6 +100,7 @@ void inputread(int len, char * file, GNode ** head)
 	}
 	free(in);
 	free(arr);
+	//run into a seg fault when testing test1.txt right here it loses 12 bytes and 568 are still reachable, I dont have to free the holder nodes do I?
 	fclose(fptr);
 
 }

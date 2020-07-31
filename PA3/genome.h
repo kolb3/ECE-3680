@@ -26,8 +26,8 @@ int getval(char c){
 
 typedef struct GNode{
   char key[MAX_KMER_LEN];/// Will hold strings only consisting of ACGT
-  int inEdges[4]; ///Edges can be A,C,G,or T. 0 = A, 1 = C, 2 = G, 3 = T
-  int outEdges[4]; ///Edges can be A,C,G,or T. 0 = A, 1 = C, 2 = G, 3 = T
+  //int inEdges[4]; ///Edges can be A,C,G,or T. 0 = A, 1 = C, 2 = G, 3 = T
+  //int outEdges[4]; ///Edges can be A,C,G,or T. 0 = A, 1 = C, 2 = G, 3 = T
   int key_len;/// this is our k length
   //struct GNode * prev;
   struct GNode * next;
