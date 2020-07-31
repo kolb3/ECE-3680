@@ -3,6 +3,8 @@
 
 #include <string.h>
 #include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_KMER_LEN 16
 
@@ -27,14 +29,10 @@ typedef struct GNode{
   int inEdges[4]; ///Edges can be A,C,G,or T. 0 = A, 1 = C, 2 = G, 3 = T
   int outEdges[4]; ///Edges can be A,C,G,or T. 0 = A, 1 = C, 2 = G, 3 = T
   int key_len;/// this is our k length
+  //struct GNode * prev;
+  struct GNode * next;
 }GNode;
 
-typedef struct LNode{
-  
-  struct LNode * next;
-  Gnode * gnode;
-  
-}ListNode:
 
 void InitGNode(GNode* node, char* k, int kl){
   int max_chars = kl < MAX_KMER_LEN ? kl : MAX_KMER_LEN;
@@ -47,15 +45,21 @@ void InitGNode(GNode* node, char* k, int kl){
   node->key_len = kl;
 }
 
-long hash(GNode* node, long GRAPH_SIZE){///this can be used to determine if string exists already
+long hash(char * key, int len, long GRAPH_SIZE){///this can be used to determine if string exists already //make sure to alter with out node add array of chars
   long toRet = 0;
   int i;
-  for(i = 0; i < node->key_len; ++i){
+  for(i = 0; i < len; ++i){
     toRet = toRet << 2;
-    toRet |= getval(node->key[i]);
+    toRet |= getval(key[i]);
   }
   toRet = toRet % GRAPH_SIZE;
   return toRet;
 }
+
+void inputread(int len, char * file, GNode ** head);
+long exponent(int len);
+void writeoutput(char * filename, GNode * head, int len);
+
+
 
 #endif //__GENOME_H_
