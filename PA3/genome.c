@@ -32,58 +32,73 @@ int main(int argc, char* argv[]){
   //LinkedListCreate(newhead);
 
 
-  inputread(k_len, inputFilename, &newhead); //reads the inputs from the file
-  writeoutput(outputFilename, newhead, k_len);
+  inputread(k_len, inputFilename, &newhead, outputFilename); //reads the inputs from the file
+  writeoutput(outputFilename, &newhead, k_len);
  
   GNode * temp = NULL;
+  GNode * hold = NULL;
 
-  while(newhead -> next != NULL)
+  temp = newhead->next;
+  hold = temp->next;
+  while((temp != NULL) | (hold != NULL))
   {
-	temp = newhead -> next -> next;
-	free(newhead->next->key); 
-	free(newhead->next);
-	newhead->next = temp;
+	//free(temp->next->key); 
+	free(temp->next);
+	temp = hold;
+	hold = hold -> next;
   }
   
-  free(newhead->key);
+  //free(newhead->key);
   free(newhead);
   
   
   return 0;
 }
 
-void inputread(int len, char * file, GNode ** head)
+void inputread(int len, char * infile, GNode ** head, char * outfile)
 {
-	char * in = NULL;
+	//char * in = NULL;
 	long size = 0;
-	int * arr = NULL;
+	//int * arr = NULL;
 	long value = 0;
+	int ct = 0;
 	GNode * hold = NULL; //for holding place
 	GNode * store = NULL; //for holding stored value
 
 	//array for hash value check
-	size = exponent(size);
-	arr = malloc(sizeof(int) * size);
+	size = exponent(len);
+	int * arr = malloc(sizeof(int) * size);
 	
 	//array for input string
-	in = malloc(sizeof(char) * len);
-	FILE * fptr = fopen(file, "r");
-
-	while( fread(&in, sizeof(char),len,fptr) == 1)
+	char * letter = NULL;
+	letter = (char*)malloc(sizeof(char) * len);
+	//char letter[len];
+	FILE * fptr = fopen(infile, "r");
+	if(fptr == NULL)
 	{
-		fseek(fptr, len - 1, SEEK_CUR);
-		value = hash(in,len,size);
-	
+		fprintf(stderr, "\nfopen didnt work\n");
+	}
+
+	while( (fread(letter,sizeof(char)*len,1,fptr) != EOF) && ct < 260000)
+	{
+		//fgets(letter,len,fptr);
+		fseek(fptr,-(len - 1),SEEK_CUR);
+		value = hash(letter,len,size);
+		printf("%d\n", ++ct);
+		if((letter[0] == '\0') | (letter[len-1] == '\0'))
+		{
+			arr[value] = 1;
+		}
 		if(arr[value] == 0)
 		{
-			if(head == NULL)	
+			if((*head) == NULL)	
 			{
 				(*head) = malloc(sizeof(GNode)); //create intial node
 				//head -> prev = NULL;          //since first node previous is null	//dont think i need prev
 				(*head) -> next = NULL;          //only allocate memory as needed
 				arr[value] = 1;               //change the value for the arr at the hash spot to 1 if its 1 then its not stored
 				store = (*head);                 //use store to move through
-				InitGNode(store, in, len);    //put all the values into the node
+				InitGNode(store, letter, len);    //put all the values into the node
 		
 			}
 			else
@@ -93,12 +108,28 @@ void inputread(int len, char * file, GNode ** head)
 				store -> next = hold;         //set the next of the current to the one just created
 				hold -> next = NULL;          //next of the one created to null
 				arr[value] = 1;               //mark that this is the first instance of this input
-				InitGNode(store, in, len);    //store the value into the node
+				store = hold;
+				hold = hold -> next;
+				InitGNode(store, letter, len);    //store the value into the node
 			}
 		
 		}
 	}
-	free(in);
+
+  	/*writeoutput(outfile, *head, len);
+ 
+	GNode * temp = NULL;
+
+	while((*head) -> next != NULL)
+  	{
+		temp = (*head) -> next -> next;
+		free((*head)->next->key); 
+		free((*head)->next);
+		(*head)->next = temp;
+ 	}
+  
+  	free((*head)->key);*/
+	free(letter);
 	free(arr);
 	//run into a seg fault when testing test1.txt right here it loses 12 bytes and 568 are still reachable, I dont have to free the holder nodes do I?
 	fclose(fptr);
@@ -108,25 +139,25 @@ void inputread(int len, char * file, GNode ** head)
 long exponent(int len)  //is a function to measure the total number of possibilities 4^len
 {
 	long size = 1; //if size 0 then only 1 can be the answer;
-	for(int i = 0; i < size; i++)
+	for(int i = 0; i < len; i++)
 	{
 		size *= 4;
 	}
 	return size;
 }
 
-void writeoutput(char * filename, GNode * head, int len)
+void writeoutput(char * filename, GNode ** head, int len)
 {
 	GNode * current = NULL;
 	//GNode * temp = NULL;
-	current = head;
+	current = (*head);
 
 	FILE * fptr = fopen(filename, "w");			     //open file
 
 	while(current != NULL)
 	{
-		fwrite(current->key, sizeof(char),len,fptr);   //write the value from the node
-		fwrite("\n", sizeof("\n"),1,fptr);
+		fwrite(current->key,sizeof(char)*len,1,fptr);   //write the value from the node
+		fprintf(fptr,"\n");
 		current = current -> next;  			     //cycle through nodes to print
 	}
 	fclose(fptr);

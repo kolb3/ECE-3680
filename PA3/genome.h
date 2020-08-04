@@ -45,7 +45,7 @@ void InitGNode(GNode* node, char* k, int kl){
   node->key_len = kl;
 }
 
-long hash(char * key, int len, long GRAPH_SIZE){///this can be used to determine if string exists already //make sure to alter with out node add array of chars
+long hash(char key[], int len, long GRAPH_SIZE){///this can be used to determine if string exists already //make sure to alter with out node add array of chars
   long toRet = 0;
   int i;
   for(i = 0; i < len; ++i){
@@ -56,9 +56,9 @@ long hash(char * key, int len, long GRAPH_SIZE){///this can be used to determine
   return toRet;
 }
 
-void inputread(int len, char * file, GNode ** head);
+void inputread(int len, char * infile, GNode ** head, char * outfile);
 long exponent(int len);
-void writeoutput(char * filename, GNode * head, int len);
+void writeoutput(char * filename, GNode ** head, int len);
 
 
 
